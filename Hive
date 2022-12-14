@@ -1,0 +1,71 @@
+
+Step 1: First create the customer table.
+
+
+create database training_exam_432577;
+use training_exam_432577;
+drop table customer_exam;
+show tables;
+create table customer(cust_id bigint,firstname String , lastname String,age int,
+profession String)
+row format delimited 
+fields terminated by ","
+stored as textfile;
+
+select * from customer limit 10;
+
+Step 2: load the data.
+
+load data inpath 'hdfs://nameservice1/user/bigcdac432577/Module5exam/custs.txt' overwrite into table customer;
+
+
+
+
+1) Write a program to find the count of customers for each profession.
+
+
+select profession,count(cust_id) as Count_of_customer from customer group by profession;
+Output:
+
+
+
+
+Create table for sales:
+
+create table sales(txn_id bigint,txn_date date,cust_id bigint,amount double,
+category String,product string,city string,state String,spendby String)
+row format delimited
+fields terminated by ","
+stored as textfile;
+
+Load data in sales table:
+
+load data inpath 'hdfs://nameservice1/user/bigcdac432577/Module5exam/txns1.txt' overwrite into table sales;
+select * from sales limit 10;
+
+
+2) Write a program to find the top 10 products sales wise
+
+Solution:
+
+select product,count(txn_id) as Sales from sales where product is not null group by product order by Sales desc limit 10;
+
+
+3) Write a program to create partiioned table on category
+Solution:
+
+
+create table category_partition(txn_id bigint,txn_date date,cust_id bigint,amount double,product string,city string,state String,spendby String) partitioned by (category string) 
+row format delimited 
+fields terminated by ","
+stored as textfile;
+
+insert overwrite table Category_partition partition(category) select s.txn_id,s.txn_date,s.cust_id,s.amount,s.product,s.city,s.state,s.spendby,s.category from sales as s distribute by category;
+
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+Inserting data into partition table:
+
+insert overwrite table Category_partition partition(category) select s.txn_id,s.txn_date,s.cust_id,s.amount,s.product,s.city,s.state,s.spendby,s.category from sales as s distribute by category;
+

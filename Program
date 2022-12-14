@@ -45,19 +45,17 @@ public class StockMarket {
 		         
 		      result.set(max);		      
 		      context.write(key, result);
-		      //context.write(key, new LongWritable(sum));
+		      
 		      
 		    }
 	   }
 	  public static void main(String[] args) throws Exception {
 		    Configuration conf = new Configuration();
 		    conf.set("mapreduce.output.textoutputformat.separator",",");
-		    //conf.set("name", "value")
-		    //conf.set("mapreduce.input.fileinputformat.split.minsize", "134217728");
+		    
 		    Job job = Job.getInstance(conf, "All Time Max Value for each stock");
 		    job.setJarByClass(StockMarket.class);
 		    job.setMapperClass(MapClass.class);
-		    //job.setCombinerClass(ReduceClass.class);
 		    job.setReducerClass(ReduceClass.class);
 		    job.setNumReduceTasks(2);
 		    job.setOutputKeyClass(Text.class);

@@ -1,5 +1,5 @@
 
-Step 1: First create the customer table.
+#Step 1: First create the customer table.
 
 
 create database training_exam_432577;
@@ -14,14 +14,14 @@ stored as textfile;
 
 select * from customer limit 10;
 
-Step 2: load the data.
+#Step 2: load the data.
 
 load data inpath 'hdfs://nameservice1/user/bigcdac432577/Module5exam/custs.txt' overwrite into table customer;
 
 
 
 
-1) Write a program to find the count of customers for each profession.
+#1) Write a program to find the count of customers for each profession.
 
 
 select profession,count(cust_id) as Count_of_customer from customer group by profession;
@@ -30,7 +30,7 @@ Output:
 
 
 
-Create table for sales:
+#Create table for sales:
 
 create table sales(txn_id bigint,txn_date date,cust_id bigint,amount double,
 category String,product string,city string,state String,spendby String)
@@ -38,21 +38,21 @@ row format delimited
 fields terminated by ","
 stored as textfile;
 
-Load data in sales table:
+#Load data in sales table:
 
 load data inpath 'hdfs://nameservice1/user/bigcdac432577/Module5exam/txns1.txt' overwrite into table sales;
 select * from sales limit 10;
 
 
-2) Write a program to find the top 10 products sales wise
+#2) Write a program to find the top 10 products sales wise
 
-Solution:
+#Solution:
 
 select product,count(txn_id) as Sales from sales where product is not null group by product order by Sales desc limit 10;
 
 
-3) Write a program to create partiioned table on category
-Solution:
+#3) Write a program to create partiioned table on category
+#Solution:
 
 
 create table category_partition(txn_id bigint,txn_date date,cust_id bigint,amount double,product string,city string,state String,spendby String) partitioned by (category string) 

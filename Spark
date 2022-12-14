@@ -1,0 +1,51 @@
+
+#Importing library and Creating schema : 
+
+from pyspark import SparkContext
+sc=SparkContext('local')
+from pyspark.sql.session import SparkSession
+spark=SparkSession(sc)
+
+from pyspark.sql.types import StructType,StringType,IntegerType,DoubleType,LongType
+
+schema=StructType().add("Year",IntegerType(),True).add("Quarter",IntegerType(),True).add("Average_revenue_per_seat",DoubleType(),True).add("Total_number_of_booked_seats",LongType(),True)
+Loading data:
+
+df=spark.read.format("csv").option("header","True").schema(schema).load("/user/bigcdac432577/Module5exam/airlines.csv")
+
+df.printSchema()
+
+
+#Creating temporary table:
+
+df.registerTempTable('airline')
+
+#Checking the data in airline table
+
+alldata=spark.sql("select * from airline")
+alldata.show()
+
+
+#1) What was the highest number of people travelled in which year? 
+
+#Solution.
+
+highestNumberPassenger=spark.sql("select year,Total_number_of_booked_seats from airline where  Total_number_of_booked_seats=(select max(Total_number_of_booked_seats) from airline)")
+highestNumberPassenger.show()
+
+
+
+
+#2) Identifying the highest revenue generation for which year 
+
+highestRevenueGeneration=spark.sql("select year,Average_revenue_per_seat from airline where Average_revenue_per_seat=(select max(Average_revenue_per_seat) from airline)")
+highestRevenueGeneration.show()
+
+
+
+
+#3) Identifying the highest revenue generation for which year and quarter (Common group)
+
+q3=spark.sql("select year,quarter, max(Average_revenue_per_seat) as HighestRevenue from airline group by year,quarter  order by HighestRevenue desc limit 1")
+q3.show()
+
